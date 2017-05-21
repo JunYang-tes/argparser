@@ -64,8 +64,8 @@ As soon as you define option object,you can use it to parse cmd line arguments b
 
 For example:
 ```
-import { OptionType } from "argparser/types"
-import { cmdParser } from "argparser/cmd"
+import { OptionType } from "cli-argparser/types"
+import { cmdParser } from "cli-argparser/cmd"
 let option = cmdParser({
   "all": {
     genShort: true,
