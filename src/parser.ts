@@ -100,7 +100,7 @@ export class Parser {
         ret[long] = ret[short]
       } else if (long in ret) {
         ret[short] = ret[long]
-      } else {
+      } else if (this.option[long].require) {
         throw new RequiredError(long)
       }
     }
@@ -130,7 +130,7 @@ export class Parser {
     optionItem.handler.handle(ret, current, ...tokens)
     //TODO:refactor
     if (optionItem.type === OptionType.ITEM
-      && optionItem.range.indexOf(tokens[0]) < 0) {
+      && optionItem.range.indexOf(tokens[0].value) < 0) {
       throw new OutOfRangeError(current, optionItem.range, tokens[0].value)
     }
   }

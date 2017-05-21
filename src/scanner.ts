@@ -13,9 +13,9 @@ export class Scanner {
     this.cmd.rule(/[^\s]+/, (ctx: any) => ctx.accept("symble"))
   }
   protected addRules(): void {
-    this.cmd.rule(/--[a-zA-Z]+/, (ctx: any,
+    this.cmd.rule(/--[a-zA-Z][a-zA-Z\-0-9]+/, (ctx: any,
       [matched]: [string]) => ctx.accept("long-option", matched.substr(2)))
-    this.cmd.rule(/-[^\d][a-zA-Z0-9]+/,
+    this.cmd.rule(/-[^\d]?[a-zA-Z0-9]+/,
       (ctx: any, [matched]: [string]) => {
         for (let ch of matched.substr(1)) {
           ctx.accept("short-option", ch)

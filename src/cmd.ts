@@ -16,13 +16,15 @@ export function cmdParser(op: Option, helper?: Helper): any {
   op = {
     ...op,
     help: {
+      require: false,
       handler: StoreTrue,
       help: "Show help message",
       genShort: true
     }
   }
 
-  if (process.argv.indexOf("--help") || process.argv.indexOf("-h")) {
+  if (process.argv.indexOf("--help") >= 0 || process.argv.indexOf("-h") >= 0) {
+    console.log(process.argv.indexOf("--help"))
     showHelp(op, helper)
     process.exit()
   }
@@ -38,6 +40,7 @@ export function cmdParser(op: Option, helper?: Helper): any {
   }
 }
 function showHelp(op: Option, helper: Helper) {
+  console.warn("dd")
   console.log("Usage:")
   console.log(helper.usage)
   console.log("\n")
