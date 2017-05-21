@@ -3,7 +3,7 @@ import { OptionType } from "../src/types"
 import { cmdParser } from "../src/cmd"
 let op: { sum: [number] } = cmdParser({
   sum: {
-    require: true,
+    required: true,
     type: OptionType.LIST,
     help: "accumulate all numbers"
   }

@@ -24,7 +24,7 @@ export const OptionType = {
 export interface OptionItem {
   default?: string | number,
   //default is undefine (false)
-  require?: boolean,
+  required?: boolean,
   handler?: Handler,
   /**
    * @see OptionType

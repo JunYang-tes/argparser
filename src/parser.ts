@@ -100,13 +100,13 @@ export class Parser {
         ret[long] = ret[short]
       } else if (long in ret) {
         ret[short] = ret[long]
-      } else if (this.option[long].require) {
+      } else if (this.option[long].required) {
         throw new RequiredError(long)
       }
     }
     for (let opName of Object.keys(this.option)) {
       let op = this.option[opName]
-      if (op.require && !(opName in ret)) {
+      if (op.required && !(opName in ret)) {
         throw new RequiredError(opName.length > 1 ? opName : this.shortToLong[opName])
       }
     }

@@ -16,7 +16,7 @@ export function cmdParser(op: Option, helper?: Helper): any {
   op = {
     ...op,
     help: {
-      require: false,
+      required: false,
       handler: StoreTrue,
       help: "Show help message",
       genShort: true
@@ -40,7 +40,6 @@ export function cmdParser(op: Option, helper?: Helper): any {
   }
 }
 function showHelp(op: Option, helper: Helper) {
-  console.warn("dd")
   console.log("Usage:")
   console.log(helper.usage)
   console.log("\n")
@@ -76,7 +75,7 @@ function showHelp(op: Option, helper: Helper) {
       }
 
       return [opName,
-        optionItem.require ? "required" : "", optionItem.help || ""]
+        optionItem.required ? "required" : "", optionItem.help || ""]
     }))
     console.log(table.toString())
   }
