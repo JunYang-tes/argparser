@@ -1,12 +1,12 @@
 {
-  "name": "argparser",
-  "version": "0.0.0",
-  "description": "argparser",
+  "name": "cli-argparser",
+  "version": "0.0.2",
+  "description": "An command line argument parser",
   "license": "MIT",
   "repository": "",
   "author": "",
   "keywords": [
-    ""
+    "arg-parser","argument","argument option","GNU style argument"
   ],
   "files": [
     "lib"
