@@ -150,5 +150,4 @@ ts-node example/ex1.ts
 ```
 
 # Todo
-+ Error output.
 + Generate complete shell script

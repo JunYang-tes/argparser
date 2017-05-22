@@ -1,11 +1,13 @@
 import { Parser } from "./parser"
-import { Option } from "./types"
+import { Option, OptionItem, OptionType } from "./types"
 import { StoreTrue } from "./handlers"
 import { ParserError } from "./errors"
+import { formatter } from "./formatter"
 const Table = require("cli-table")
 export interface Helper {
   usage: string,
   example?: string | [string],
+  formatOptionName?: (op?: OptionItem) => string
   showOp?: (op: Option, width: number) => void
 }
 export function cmdParser(op: Option, helper?: Helper): any {
@@ -52,11 +54,19 @@ function showParserError(err: ParserError, arg: string) {
   console.log(repeat(" ", err.getToken().pos).join("") + "^")
   console.log(err.message)
 }
+
+function defaultOptionName(op: OptionItem): string {
+  return formatter[op.type] ? formatter[op.type]() : ""
+}
+
 function showHelp(op: Option, helper: Helper) {
   console.log("Usage:")
   console.log(helper.usage)
   console.log("\n")
   console.log("Options:")
+  if (!helper.formatOptionName) {
+    helper.formatOptionName = defaultOptionName
+  }
   if (helper.showOp) {
     console.log(helper.showOp(op, 0))
   } else {
@@ -79,6 +89,7 @@ function showHelp(op: Option, helper: Helper) {
       } else {
         opName = "-" + opName
       }
+      helper.formatOptionName && (opName += " " + helper.formatOptionName(optionItem))
       let help = optionItem.help
       if (!help) {
         help = ""
