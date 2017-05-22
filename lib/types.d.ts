@@ -22,7 +22,7 @@ export declare const OptionType: {
 };
 export interface OptionItem {
     default?: string | number;
-    require?: boolean;
+    required?: boolean;
     handler?: Handler;
     type?: string;
     help?: string;
