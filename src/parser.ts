@@ -106,6 +106,9 @@ export class Parser {
     }
     for (let opName of Object.keys(this.option)) {
       let op = this.option[opName]
+      if ("default" in op && !(opName in ret)) {
+        ret[opName] = op.default
+      }
       if (op.required && !(opName in ret)) {
         throw new RequiredError(opName.length > 1 ? opName : this.shortToLong[opName])
       }

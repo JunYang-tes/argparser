@@ -9,6 +9,7 @@ let option = cmdParser({
     type: OptionType.NUMBER
   },
   "color": {
+    default: "always",
     type: OptionType.ITEM,
     range: ["always", "auto", "never"]
   }
