@@ -1,6 +1,7 @@
 import { Parser } from "./parser"
 import { Option } from "./types"
 import { StoreTrue } from "./handlers"
+import { ParserError } from "./errors"
 const Table = require("cli-table")
 export interface Helper {
   usage: string,
@@ -35,9 +36,21 @@ export function cmdParser(op: Option, helper?: Helper): any {
     let ret = parser.parse(arg)
     return ret;
   } catch (e) {
-    console.log(e)
+    if (e instanceof ParserError) {
+      showParserError(e, arg)
+    } else {
+      console.log(e.message)
+    }
     process.exit()
   }
+}
+function repeat<T>(ele: T, times: number): T[] {
+  return new Array<T>(times).fill(ele)
+}
+function showParserError(err: ParserError, arg: string) {
+  console.log(arg)
+  console.log(repeat(" ", err.getToken().pos).join("") + "^")
+  console.log(err.message)
 }
 function showHelp(op: Option, helper: Helper) {
   console.log("Usage:")

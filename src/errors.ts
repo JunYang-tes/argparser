@@ -14,6 +14,11 @@ export class ExpectValueError extends ParserError {
     super(token, `Option ${token.value} needs one or more argument(s).`)
   }
 }
+export class ExpectNumberError extends ParserError {
+  constructor(token: Token) {
+    super(token, `Option ${token.value} needs a number value`)
+  }
+}
 export class RequiredError extends Error {
   constructor(option: string) {
     super(`Option ${option} is required.`)

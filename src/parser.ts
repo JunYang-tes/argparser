@@ -3,7 +3,7 @@ import { Option, OptionItem, OptionType } from "./types"
 import { Store, Count } from "./handlers"
 import { DEFAULT_HANDLER } from "./defaultHandler"
 import * as IDebug from "debug"
-import { ExpectValueError, RequiredError, OutOfRangeError } from "./errors"
+import { ExpectValueError, RequiredError, OutOfRangeError, ExpectNumberError } from "./errors"
 let debug = IDebug("parser")
 /**
  * {
@@ -132,6 +132,12 @@ export class Parser {
     if (optionItem.type === OptionType.ITEM
       && optionItem.range.indexOf(tokens[0].value) < 0) {
       throw new OutOfRangeError(current, optionItem.range, tokens[0].value)
+    }
+
+    if (optionItem.type === OptionType.NUMBER) {
+      let value = ret[current.value] = Number(ret[current.value])
+      if (Number.isNaN(value))
+        throw new ExpectNumberError(current)
     }
   }
   protected getTokens(count: number): Token[] {
