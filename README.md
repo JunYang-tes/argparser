@@ -19,12 +19,12 @@ Using a js object to define options.
   }
 }
 ```
-**option**
+**option**  
 Specify the option name. such us `color` in `ls --color ...`
-**required**
+**required**  
 Indicate that is this option optional.
 
-**handler** 
+**handler**  
 Specify what to do with this option.It is an object looks like:
 ```
 {
@@ -43,7 +43,7 @@ There are already 4 handlers:
 
 If you do not specify it should be determined by `type`
 
-**type**
+**type**  
 Specify the type of this optoin which can be :
 + List (Hander is Appender)
 + Item  (Hander is Store)
@@ -53,10 +53,10 @@ Specify the type of this optoin which can be :
 
 All these type can be found within types.ts
 
-**range**
+**range**  
 If `type` is item,you should specify an array to limit the values can be.
 
-**genShort**
+**genShort**  
 Specify whether using a short option as the same.
 The short option is the first character of long option.(short option starts with one dash and long with two)
 
@@ -64,8 +64,8 @@ As soon as you define option object,you can use it to parse cmd line arguments b
 
 For example:
 ```
-import { OptionType } from "cli-argparser/types"
-import { cmdParser } from "cli-argparser/cmd"
+import { OptionType } from "cli-argparser/lib/types"
+import { cmdParser } from "cli-argparser/lib/cmd"
 let option = cmdParser({
   "all": {
     genShort: true,
@@ -87,6 +87,59 @@ You will see the output:
 { strings: [], a: 1, color: 'auto', 'block-size': 1000, all: 1 }
 ```
 
+Or
+```
+import { cmd } from "cli-argparser"
+import { types } from "cli-argparser"
+let option = cmd.cmdParser({
+  "all": {
+    genShort: true,
+    type: types.OptionType.SWITCH
+  },
+  "block-size": {
+    type: types.OptionType.NUMBER
+  },
+  "color": {
+    type: types.OptionType.ITEM,
+    range: ["always", "auto", "never"]
+  }
+})
+console.log(option)
+```
+
+
+
+**Node version**  
+```
+const { cmdParser } = require("cli-argparser/lib/cmd")
+const { OptionType } = require("cli-argparser/lib/types")
+let op = cmdParser({
+  "all": {
+    genShort: true,
+    type: OptionType.SWITCH
+  },
+  "block-size": {
+    type: OptionType.NUMBER
+  },
+  "color": {
+    type: OptionType.ITEM,
+    range: ["always", "auto", "never"]
+  }
+})
+console.log(op)
+```
+
+Or using 
+```
+const { cmd, types } = require("cli-argparser")
+const cmdParser = cmd.cmdParser
+const OptionType = types.OptionType
+```
+replace 
+```
+const { cmdParser } = require("cli-argparser/lib/cmd")
+const { OptionType } = require("cli-argparser/lib/types")
+```
 
 # Example
 See example directory, if you want run it directly please install ts-node.
