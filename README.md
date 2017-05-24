@@ -15,7 +15,8 @@ Using a js object to define options.
     type:string,
     help:string,
     range:[string|number],
-    genShort:boolean
+    genShort:boolean,
+    convert:any=>any
   }
 }
 ```
@@ -50,6 +51,7 @@ Specify the type of this optoin which can be :
 + String (Hander is Store)
 + Number （Hander is Store)
 + Switch (Hander is Count)
++ File (Hander is Store)
 
 All these type can be found within types.ts
 
@@ -141,6 +143,89 @@ const { cmdParser } = require("cli-argparser/lib/cmd")
 const { OptionType } = require("cli-argparser/lib/types")
 ```
 
+# Convertor
+
+You can specify a convertor for each option. A convertor is a function which take a string as its first argument and return a converted value.
+
+If you didn't specify a convertor,cli-argparser would select one as default (via option's type)
++ List (nil)
++ Number (toNumber)
++ File (toFile)
++ String (nil)
++ Item (nil)
+
+>`toFile` do nothing expect varify existify 
+
+There are several convertors defined in cli-argparser/lib/convertor.ts
+They are:
++ nil  (do nothing)
++ toNumber
++ toFile
++ toReadFileStream
++ toWriteFileStream
+
+**NOTE**
+>Default value wouldn't be converted by convertor.
+
+```
+//some.js
+const { cmd, types } = require("cli-argparser")
+const cmdParser = cmd.cmdParser
+const OptionType = types.OptionType
+const { convertor } = require("cli-argparser")
+
+
+let op = cmdParser({
+  "in-file": {
+    type: OptionType.FILE,
+    convert: convertor.toReadFileStream,
+  }
+})
+console.log(op)
+```
+>node some.js --in-file filePath
+
+You will see:
+```
+{ strings: [],
+  'in-file': 
+   ReadStream {
+     _readableSt
+     ...
+```
+
+## Custom convertor
+Some the following to custom.js
+```
+#!env node
+const { cmd } = require("cli-argparser")
+let op = cmd.cmdParser({
+  json: {
+    required: true,
+    genShort: true,
+    convert: (value) => {
+      console.log("value is:", value)
+      return JSON.parse(value)
+    }
+  }
+})
+console.log("option is:", op.json)
+```
+ And run it with :
+```
+chmod +x test.js
+./test.js -j -- '{"a":1,"b":[1, 3]}'
+```
+Or
+```
+node test.js -j -- '{"a":1,"b":[1, 3]}'
+```
+You will see this output on your terminal:
+```
+value is: {"a":1,"b":[1, 3]}
+option is: { a: 1, b: [ 1, 3 ] }
+```
+
 # Example
 See example directory, if you want run it directly please install ts-node.
 For example:
@@ -148,6 +233,8 @@ For example:
 cd argparser
 ts-node example/ex1.ts
 ```
+ex1.ts is about convertor and custom convertor
+
 
 # Todo
 + Generate complete shell script

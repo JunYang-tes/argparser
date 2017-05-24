@@ -1,3 +1,6 @@
+#!env ts-node
+import * as IDebug from "debug"
+IDebug.enable(".*")
 import { OptionType } from "../src/types"
 import { cmdParser } from "../src/cmd"
 let option = cmdParser({

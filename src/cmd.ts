@@ -51,7 +51,8 @@ function repeat<T>(ele: T, times: number): T[] {
 }
 function showParserError(err: ParserError, arg: string) {
   console.log(arg)
-  console.log(repeat(" ", err.getToken().pos).join("") + "^")
+  let token = err.getToken()
+  console.log(repeat(" ", token.pos + (token.value as string).length / 2).join("") + "^")
   console.log(err.message)
 }
 

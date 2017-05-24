@@ -16,3 +16,6 @@ export declare class RequiredError extends Error {
 export declare class OutOfRangeError extends ParserError {
     constructor(optionToken: Token, expected: [string | number], got: string | number);
 }
+export declare class ConvertError extends ParserError {
+    constructor(optionToken: Token, error: string);
+}

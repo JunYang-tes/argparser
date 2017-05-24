@@ -9,7 +9,6 @@ describe("parser", () => {
   it("", () => {
     let parser = new Parser({
       "item": {
-        require: true,
         type: OptionType.ITEM,
         range: ["item1", "item2"]
       },
@@ -17,7 +16,6 @@ describe("parser", () => {
         type: OptionType.NUMBER
       },
       "numbers": {
-        require: true,
         type: OptionType.LIST
       },
       "a": {

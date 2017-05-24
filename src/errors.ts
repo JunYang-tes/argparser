@@ -30,3 +30,8 @@ export class OutOfRangeError extends ParserError {
     super(optionToken, `Expect argument is one of ${expected.join(',')} , but got ${got}`)
   }
 }
+export class ConvertError extends ParserError {
+  constructor(optionToken: Token, error: string) {
+    super(optionToken, error)
+  }
+}

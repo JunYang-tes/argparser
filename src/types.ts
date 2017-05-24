@@ -6,6 +6,9 @@ export const TokenType = {
   SYMBLE: "symble",
   EOF: "EOF"
 }
+export interface convert {
+  (value: any, option?: Token): any
+}
 
 export interface Token {
   type: string
@@ -19,7 +22,8 @@ export const OptionType = {
   STRING: "string",
   NUMBER: "number",
   ITEM: "item",
-  SWITCH: "switch"
+  SWITCH: "switch",
+  FILE: "file",
 }
 export interface OptionItem {
   default?: string | number,
@@ -33,6 +37,7 @@ export interface OptionItem {
   type?: string,
   help?: string,
   range?: [any],
+  convert?: convert,
   genShort?: boolean,
 }
 export interface Option {

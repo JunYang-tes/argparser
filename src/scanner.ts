@@ -13,9 +13,12 @@ export class Scanner {
     this.cmd.rule(/[^\s]+/, (ctx: any) => ctx.accept("symble"))
   }
   protected addRules(): void {
+    this.cmd.rule(/--\s.*/, (ctx: any, [mached]: [string]) => {
+      ctx.accept("string", mached.replace(/--\s/, ""))
+    })
     this.cmd.rule(/--[a-zA-Z][a-zA-Z\-0-9]+/, (ctx: any,
       [matched]: [string]) => ctx.accept("long-option", matched.substr(2)))
-    this.cmd.rule(/-[^\d]?[a-zA-Z0-9]+/,
+    this.cmd.rule(/-[^\d][a-zA-Z0-9]*/,
       (ctx: any, [matched]: [string]) => {
         for (let ch of matched.substr(1)) {
           ctx.accept("short-option", ch)
@@ -29,9 +32,7 @@ export class Scanner {
       [mached]: [string]) => ctx.accept("string", mached.slice(1, -1)
         .replace(/\\\\/, '\\')
         .replace(/\\"/, '"')))
-    this.cmd.rule(/--\s.*/, (ctx: any, [mached]: [string]) => {
-      ctx.accept("string", mached.replace(/--\s/, ""))
-    })
+
   }
   private toToken(token: any): Token {
     return {
