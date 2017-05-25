@@ -1,9 +1,12 @@
 {
   "name": "cli-argparser",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "An command line argument parser",
   "license": "MIT",
-  "repository": "",
+   "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OuyangQianba/argparser"
+  },
   "author": "",
   "bugs": {
     "url": "https://github.com/OuyangQianba/argparser"
