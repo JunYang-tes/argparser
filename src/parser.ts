@@ -24,12 +24,101 @@ let debug = IDebug("parser")
  */
 export class Parser {
   protected scanner: Scanner
-  protected option: Option
   protected token: Token
-  protected shortToLong: { [idx: string]: string }
-
-  constructor(option: Option) {
+  constructor() {
     this.scanner = new Scanner()
+  }
+
+  protected match(...tokenTypes: string[]): void {
+    if (tokenTypes.indexOf(this.token.type) >= 0) {
+      this.token = this.scanner.next()
+    } else {
+      //error handler
+    }
+  }
+  parse(content: string): any {
+    this.scanner.input(content)
+    this.token = this.scanner.next()
+    let ret = {
+      strings: []
+    } as any
+    let optionName: string
+    while (this.token.type !== TokenType.EOF) {
+      switch (this.token.type) {
+        case TokenType.SHORT_OPTION:
+          this.parseOption(ret)
+          break;
+        case TokenType.LONG_OPTIONS:
+          this.parseOption(ret)
+          break;
+        default:
+          this.otherToken(ret)
+          break;
+      }
+    }
+    return ret
+  }
+  protected parseOption(ret: any): void {
+
+  }
+  protected getTokens(count: number): Token[] {
+    let ret: Token[] = []
+    this.match(this.token.type)
+    if (count < 0) {
+      while ([TokenType.NUMBER, TokenType.STRING, TokenType.SYMBLE].some(type => type === this.token.type)) {
+        ret.push(this.token)
+        this.match(this.token.type)
+      }
+    } else {
+      while (count > 0 && [TokenType.NUMBER, TokenType.STRING, TokenType.SYMBLE].some(type => type === this.token.type)) {
+        ret.push(this.token)
+        this.match(this.token.type)
+        count--
+      }
+      if (count !== 0) {
+        throw "need_argument"
+      }
+    }
+    return ret
+  }
+  protected otherToken(ret: any): void {
+    ret.strings.push(this.token.value)
+    this.match(this.token.type)
+  }
+
+}
+
+export class GuessParser extends Parser {
+  constructor() {
+    super()
+  }
+  protected parseOption(ret: any): void {
+    let option = this.token.value.toString()
+    let values: Token[] = this.getTokens(-1)
+    if (values.length === 0) {
+      //count
+      ret[option] = Number.isFinite(ret[option]) ? ret[option] + 1 : 1
+    } else if (values.length === 1) {
+      if (ret[option] instanceof Array) {
+        ret[option].push(values[0].value)
+      } else {
+        ret[option] = values[0].value
+      }
+    } else {
+      if (ret[option] !== undefined) {
+        ret[option] = values.map(v => v.value).concat(ret[option])
+      } else {
+        ret[option] = values.map(v => v.value)
+      }
+    }
+  }
+}
+
+export class SpecifiedParser extends Parser {
+  protected option: Option
+  protected shortToLong: { [idx: string]: string }
+  constructor(option: Option) {
+    super()
     this.shortToLong = {} as { [idx: string]: string }
     Object.keys(option).forEach((key) => {
       this.checkOp(option, key, option[key])
@@ -74,33 +163,9 @@ export class Parser {
     }
   }
 
-  protected match(...tokenTypes: string[]): void {
-    if (tokenTypes.indexOf(this.token.type) >= 0) {
-      this.token = this.scanner.next()
-    } else {
-      //error handler
-    }
-  }
+
   parse(content: string): any {
-    this.scanner.input(content)
-    this.token = this.scanner.next()
-    let ret = {
-      strings: []
-    } as any
-    let optionName: string
-    while (this.token.type !== TokenType.EOF) {
-      switch (this.token.type) {
-        case TokenType.SHORT_OPTION:
-          this.parseOption(ret)
-          break;
-        case TokenType.LONG_OPTIONS:
-          this.parseOption(ret)
-          break;
-        default:
-          this.otherToken(ret)
-          break;
-      }
-    }
+    let ret = super.parse(content)
     for (let short of Object.keys(this.shortToLong)) {
       let long = this.shortToLong[short]
       if (short in ret) {
@@ -150,29 +215,8 @@ export class Parser {
       throw new ConvertError(current, err)
     }
   }
-  protected getTokens(count: number): Token[] {
-    let ret: Token[] = []
-    this.match(this.token.type)
-    if (count < 0) {
-      while ([TokenType.NUMBER, TokenType.STRING, TokenType.SYMBLE].some(type => type === this.token.type)) {
-        ret.push(this.token)
-        this.match(this.token.type)
-      }
-    } else {
-      while (count > 0 && [TokenType.NUMBER, TokenType.STRING, TokenType.SYMBLE].some(type => type === this.token.type)) {
-        ret.push(this.token)
-        this.match(this.token.type)
-        count--
-      }
-      if (count !== 0) {
-        throw "need_argument"
-      }
-    }
-    return ret
-  }
   protected otherToken(ret: any): void {
     ret.strings.push(this.token.value)
     this.match(this.token.type)
   }
-
 }

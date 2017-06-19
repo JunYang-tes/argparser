@@ -1,4 +1,4 @@
-import { Parser } from "./parser"
+import { SpecifiedParser } from "./parser"
 import { Option, OptionItem, OptionType } from "./types"
 import { StoreTrue } from "./handlers"
 import { ParserError } from "./errors"
@@ -31,7 +31,7 @@ export function cmdParser(op: Option, helper?: Helper): any {
     showHelp(op, helper)
     process.exit()
   }
-  let parser = new Parser(op)
+  let parser = new SpecifiedParser(op)
   let arg = process.argv.slice(2).join(" ")
   let ret;
   try {
