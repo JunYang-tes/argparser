@@ -94,21 +94,25 @@ export class GuessParser extends Parser {
   }
   protected parseOption(ret: any): void {
     let option = this.token.value.toString()
-    let values: Token[] = this.getTokens(-1)
-    if (values.length === 0) {
-      //count
+    if (option.length === 1) {
       ret[option] = Number.isFinite(ret[option]) ? ret[option] + 1 : 1
-    } else if (values.length === 1) {
-      if (ret[option] instanceof Array) {
-        ret[option].push(values[0].value)
-      } else {
-        ret[option] = values[0].value
-      }
     } else {
-      if (ret[option] !== undefined) {
-        ret[option] = values.map(v => v.value).concat(ret[option])
+      let values: Token[] = this.getTokens(-1)
+      if (values.length === 0) {
+        //count
+        ret[option] = Number.isFinite(ret[option]) ? ret[option] + 1 : 1
+      } else if (values.length === 1) {
+        if (ret[option] instanceof Array) {
+          ret[option].push(values[0].value)
+        } else {
+          ret[option] = values[0].value
+        }
       } else {
-        ret[option] = values.map(v => v.value)
+        if (ret[option] !== undefined) {
+          ret[option] = values.map(v => v.value).concat(ret[option])
+        } else {
+          ret[option] = values.map(v => v.value)
+        }
       }
     }
   }

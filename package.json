@@ -1,6 +1,6 @@
 {
   "name": "cli-argparser",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "description": "An command line argument parser",
   "license": "MIT",
    "repository": {

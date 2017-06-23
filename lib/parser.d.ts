@@ -21,9 +21,7 @@ export declare class SpecifiedParser extends Parser {
     };
     constructor(option: Option);
     protected checkOp(option: Option, optionName: string, op: OptionItem): void;
-    protected match(...tokenTypes: string[]): void;
     parse(content: string): any;
     protected parseOption(ret: any): void;
-    protected getTokens(count: number): Token[];
     protected otherToken(ret: any): void;
 }
