@@ -22,7 +22,7 @@ let debug = IDebug("parser")
  * 
  * 
  */
-export class Parser {
+export abstract class Parser {
   protected scanner: Scanner
   protected token: Token
   constructor() {
@@ -58,9 +58,7 @@ export class Parser {
     }
     return ret
   }
-  protected parseOption(ret: any): void {
-
-  }
+  protected abstract parseOption(ret: any): void
   protected getTokens(count: number): Token[] {
     let ret: Token[] = []
     this.match(this.token.type)
@@ -96,6 +94,7 @@ export class GuessParser extends Parser {
     let option = this.token.value.toString()
     if (option.length === 1) {
       ret[option] = Number.isFinite(ret[option]) ? ret[option] + 1 : 1
+      this.match(this.token.type)
     } else {
       let values: Token[] = this.getTokens(-1)
       if (values.length === 0) {

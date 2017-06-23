@@ -1,12 +1,12 @@
 import { Token, Scanner } from "./scanner";
 import { Option, OptionItem } from "./types";
-export declare class Parser {
+export declare abstract class Parser {
     protected scanner: Scanner;
     protected token: Token;
     constructor();
     protected match(...tokenTypes: string[]): void;
     parse(content: string): any;
-    protected parseOption(ret: any): void;
+    protected abstract parseOption(ret: any): void;
     protected getTokens(count: number): Token[];
     protected otherToken(ret: any): void;
 }
