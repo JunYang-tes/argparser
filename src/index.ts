@@ -2,5 +2,6 @@ import * as cmd from "./cmd"
 import * as types from "./types"
 import * as handlers from "./handlers"
 import * as convertor from "./convertor"
+import { program } from "./program"
 
-export { cmd, types, handlers, convertor }
+export { program, cmd, types, handlers, convertor }

@@ -1,9 +1,9 @@
 {
   "name": "cli-argparser",
-  "version": "0.0.11",
+  "version": "0.0.13",
   "description": "An command line argument parser",
   "license": "MIT",
-   "repository": {
+  "repository": {
     "type": "git",
     "url": "git+https://github.com/OuyangQianba/argparser"
   },
@@ -35,8 +35,7 @@
   "dependencies": {
     "cli-table": "^0.3.1",
     "debug": "^2.6.8",
-    "global": "^4.3.2",
-    "lexor": "^1.0.1"
+    "global": "^4.3.2"
   },
   "devDependencies": {
     "@types/chai": "^3.0.0",

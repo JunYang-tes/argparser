@@ -210,12 +210,12 @@ export class SpecifiedParser extends Parser {
     if (optionItem.type === OptionType.ITEM
       && optionItem.range.indexOf(tokens[0].value) < 0) {
       throw new OutOfRangeError(current, optionItem.range, tokens[0].value)
-    }
+    } 
     try
     { ret[current.value] = optionItem.convert(ret[current.value]) }
     catch (e) {
       let err = e instanceof Error ? e.message : e as string
-      throw new ConvertError(current, err)
+      throw new ConvertError(tokens[0] || current, err)
     }
   }
   protected otherToken(ret: any): void {
