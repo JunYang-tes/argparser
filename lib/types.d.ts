@@ -42,3 +42,10 @@ export interface Handler {
     expectTokens: number;
     handle: (ret: any, current: Token, ...tokens: Token[]) => void;
 }
+export interface SubcmdOption {
+    [name: string]: Option;
+}
+export interface SubcmdResult {
+    cmd: string;
+    result: any;
+}

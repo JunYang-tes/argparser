@@ -235,6 +235,126 @@ ts-node example/ex1.ts
 ```
 ex1.ts is about convertor and custom convertor
 
+# Subcommand 
+That some program like `docker` has subcommands is supported now.
+For exsample:
+```
+docker [ps|exec]
 
-# Todo
-+ Generate complete shell script
+ps
+==
+  -a  --all show all
+  -f, --filter value 
+
+exec
+====
+  -i, --interactive
+  -t, --tty
+```
+
+You can use `subcmdParser` to parse arguments for those cases.
+`subcmdParser` takes a description object as input and return an object as result
+
+```javascript
+#!env node
+const { cmd } = require("cli-argparser")
+let op = cmd.subcmdParser({
+  ps: {
+    all: {
+      genShort: true,
+      type: "swicth" 
+    },
+    filter: {
+      genShort: true
+    }
+  },
+  exec: {
+    tty: {
+      genShort: true,
+      type: "switch"
+    },
+    interactive: {
+      genShort: true,
+      type: "switch"
+    }
+  } 
+})
+console.log("option is:", op)
+
+```
+## Description Object
+```
+{
+  [subCmdName:string]:{
+    [optionName:string]:{
+      default?: string | number,
+      required?: boolean,
+      handler?: Handler,
+      /**
+      * @see OptionType
+      * @desc Default type is "string" for long-option,"switch" for short-option
+      */
+      type?: string,
+      help?: string,
+      range?: [any],
+      convert?: convert,
+      genShort?: boolean, 
+    }
+  }
+}
+```
+
+# Example
+
+Save the code snippet to test.js, then try:
+```
+node test.js
+node test.js random
+node test.js random --from 10 --to 100
+node test.js custom-convert --kv hello=world
+```
+
+```
+#! env node
+const args = require("cli-argparser")
+const argsDefination = {
+  //sub cmd `random`
+  random: {
+    //sub cmd option `from`
+    from: {
+      genShort: true,
+      default: 0,
+      type: "number",
+      help: "lower bound"
+    },
+    to: {
+      genShort: true,
+      default: 1,
+      type: "number",
+      help: "upper bound"
+    }
+  },
+  "custom-convert": {
+    kv: {
+      required: true,
+      help: "key1=value1,key2=value2",
+      convert: (value) =>
+        value.split(",")
+          .map(str => str.split("="))
+          .reduce((ret, [k, v]) => (ret[k] = v, ret), {})
+
+    }
+  }
+}
+console.log("Arguments:\n", args.cmd.subcmdParser(argsDefination))
+
+
+args.program(argsDefination, {
+  random({ from, to }) {
+    console.log(from + Math.random() * (to - from))
+  },
+  "custom-convert": (opt) => {
+    console.log("Option is:", opt)
+  }
+})
+```

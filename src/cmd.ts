@@ -1,21 +1,17 @@
 import { SpecifiedParser } from "./parser"
-import { Option, OptionItem, OptionType } from "./types"
+import { Option, OptionItem, OptionType, SubcmdOption } from "./types"
 import { StoreTrue } from "./handlers"
 import { ParserError } from "./errors"
 import { formatter } from "./formatter"
 const Table = require("cli-table")
 export interface Helper {
-  usage: string,
+  usage?: string,
   example?: string | [string],
   formatOptionName?: (op?: OptionItem) => string
   showOp?: (op: Option, width: number) => void
 }
-export function cmdParser(op: Option, helper?: Helper): any {
-  if (!helper) {
-    helper = {
-      usage: process.argv[1] + " options",
-    }
-  }
+
+function _cmdParser(cmd: string, op: Option): any {
   op = {
     ...op,
     help: {
@@ -25,26 +21,65 @@ export function cmdParser(op: Option, helper?: Helper): any {
       genShort: true
     }
   }
-
-  if (process.argv.indexOf("--help") >= 0 || process.argv.indexOf("-h") >= 0) {
-    console.log(process.argv.indexOf("--help"))
-    showHelp(op, helper)
-    process.exit()
-  }
   let parser = new SpecifiedParser(op)
-  let arg = process.argv.slice(2).join(" ")
   let ret;
   try {
-    let ret = parser.parse(arg)
+    let ret = parser.parse(cmd)
     return ret;
   } catch (e) {
     if (e instanceof ParserError) {
-      showParserError(e, arg)
+      showParserError(e, cmd)
     } else {
       console.log(e.message)
     }
     process.exit()
   }
+
+}
+export function subcmdParser(op: SubcmdOption, helper?: Helper) {
+  let cmds = Object.keys(op)
+  helper = helper || {
+    usage: process.argv[1] + ` [${cmds.join("|")}] options \n\n`
+  }
+  if (process.argv.length < 3 || process.argv.indexOf("--help") >= 0 || process.argv.indexOf("-h") >= 0) {
+    console.log("Usage:\n")
+    console.log(helper.usage)
+    console.log("Commands:\n\n")
+
+    for (let cmd of cmds) {
+      console.log(cmd)
+      console.log(cmd.replace(/./g, "="))
+      showHelp(op[cmd], {
+        ...helper,
+        usage: process.argv[1] + " " + cmd
+      })
+    }
+    process.exit()
+  }
+  let cmd = process.argv[2]
+  if (cmd in op) {
+    return {
+      cmd,
+      result: _cmdParser(process.argv.slice(3).join(" "), op[cmd])
+    }
+  } else {
+    console.log("Unknow command " + cmd)
+  }
+}
+
+
+export function cmdParser(op: Option, helper?: Helper): any {
+  if (!helper) {
+    helper = {
+      usage: process.argv[1] + " options",
+    }
+  }
+  if (process.argv.indexOf("--help") >= 0 || process.argv.indexOf("-h") >= 0) {
+    showHelp(op, helper)
+    process.exit()
+  }
+  let arg = process.argv.slice(2).join(" ")
+  return _cmdParser(arg, op)
 }
 function repeat<T>(ele: T, times: number): T[] {
   return new Array<T>(times).fill(ele)
@@ -61,9 +96,11 @@ function defaultOptionName(op: OptionItem): string {
 }
 
 function showHelp(op: Option, helper: Helper) {
-  console.log("Usage:")
-  console.log(helper.usage)
-  console.log("\n")
+  if (helper.usage) {
+    console.log("Usage:")
+    console.log(helper.usage)
+    console.log("\n")
+  }
   console.log("Options:")
   if (!helper.formatOptionName) {
     helper.formatOptionName = defaultOptionName
