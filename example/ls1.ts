@@ -1,4 +1,3 @@
-#!env ts-node
 import * as IDebug from "debug"
 IDebug.enable(".*")
 import { OptionType } from "../src/types"
@@ -17,5 +16,4 @@ let option = cmdParser({
     range: ["always", "auto", "never"]
   }
 })
-
 console.log(option)

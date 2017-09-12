@@ -4,10 +4,10 @@ const expect = chai.expect
 import * as IDebug from "debug"
 IDebug.enable(".*")
 
-import { Parser } from "../src/parser"
+import { Parser, SpecifiedParser, GuessParser } from "../src/parser"
 describe("parser", () => {
-  it("", () => {
-    let parser = new Parser({
+  it("SpecifiedParser", () => {
+    let parser = new SpecifiedParser({
       "item": {
         type: OptionType.ITEM,
         range: ["item1", "item2"]
@@ -33,4 +33,15 @@ describe("parser", () => {
       strings: []
     })
   })
+  it("GuessParser", () => {
+    let parser = new GuessParser()
+    expect(parser.parse('--title "Search by bing" --text "https://www.bing.com/search?q=__arg__"  --value "https://www.bing.com/search?q=__arg__"'))
+      .to.deep.equal({
+        title: "Search by bing",
+        text: "https://www.bing.com/search?q=__arg__",
+        value: "https://www.bing.com/search?q=__arg__",
+        strings: []
+      })
+  })
+
 })
