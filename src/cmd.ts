@@ -137,7 +137,7 @@ function showHelp(op: Option, helper: Helper) {
       }
 
       return [opName,
-        optionItem.required ? "required" : "", optionItem.help || ""]
+        optionItem.required ? "required" : "", help]
     }))
     console.log(table.toString())
   }

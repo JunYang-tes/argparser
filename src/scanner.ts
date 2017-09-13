@@ -1,4 +1,3 @@
-const Lexor = require("lexor")
 import { TokenType, Token } from "./types"
 export { TokenType, Token }
 
