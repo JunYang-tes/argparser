@@ -82,6 +82,10 @@ export function cmdParser(op: Option, helper?: Helper): any {
   return _cmdParser(arg, op)
 }
 function repeat<T>(ele: T, times: number): T[] {
+  times = ~~times
+  if (Number.isNaN(times)) {
+    return []
+  }
   return new Array<T>(times).fill(ele)
 }
 function showParserError(err: ParserError, arg: string) {
