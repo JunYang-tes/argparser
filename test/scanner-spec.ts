@@ -10,7 +10,7 @@ const plusk = (token: Token
 }
 const typeAndValue = (token: any) => plusk(token, "type", "value")
 const scanner = new Scanner()
-scanner.input("test -a -hl --number 100 100.1 -10 -10.1 .5  \"i am a string, -q --test\\\"in string\" -- a pure string -td")
+scanner.input("test -a 2010/10/10 -hl --number 100 100.1 -10 -10.1 .5  \"i am a string, -q --test\\\"in string\" -- a pure string -td")
 
 describe("scanner", () => {
   it("should get token  symble test", () => {
@@ -21,6 +21,9 @@ describe("scanner", () => {
   });
   it("should get token  switch a", () => {
     expect(typeAndValue(scanner.next())).to.deep.equal([TokenType.SHORT_OPTION, "a"])
+  })
+  it("should get toke string 2010/10/10",()=>{
+    expect(typeAndValue(scanner.next())).to.deep.equal([TokenType.SYMBLE,"2010/10/10"])
   })
   it("should get token  switch h", () => {
     expect(typeAndValue(scanner.next())).to.deep.equal([TokenType.SHORT_OPTION, "h"])
